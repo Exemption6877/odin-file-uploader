@@ -12,6 +12,11 @@ require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
 
+// Routers
+const authRouter = require("./routers/authRouter");
+
+app.use("/", authRouter);
+
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
