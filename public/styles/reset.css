@@ -1,0 +1,70 @@
+/* 1. Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* Ensures padding and border are included in the element's total width/height */
+}
+
+/* 2. Remove default margin */
+* {
+  margin: 0; /* Removes the default margin applied by browsers */
+}
+
+body {
+  /* 3. Add accessible line-height */
+  line-height: 1.5; /* Improves readability by increasing space between lines of text */
+
+  /* 4. Improve text rendering */
+  -webkit-font-smoothing: antialiased; /* Ensures better font rendering on webkit browsers */
+}
+
+/* 5. Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block; /* Prevents space below images, videos, and other media elements */
+  max-width: 100%; /* Ensures media scales within container's width */
+}
+
+/* 6. Inherit fonts for form controls */
+input,
+button,
+textarea,
+select {
+  font: inherit; /* Inherits font styles from the parent container */
+}
+
+/* 7. Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word; /* Prevents text overflow by wrapping text within the container */
+}
+
+/* 8. Improve line wrapping */
+p {
+  text-wrap: pretty; /* Enables pretty line wrapping for paragraphs */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance; /* Balances text wrapping for headings */
+}
+
+/*
+  9. Create a root stacking context
+*/
+#root,
+#__next {
+  isolation: isolate; /* Isolates the stacking context, preventing child elements from affecting others */
+}
