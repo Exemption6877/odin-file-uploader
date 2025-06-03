@@ -6,18 +6,44 @@
     <link rel="stylesheet" href="styles/auth.css" />
     <link rel="stylesheet" href="styles/reset.css" />
     <link rel="stylesheet" href="styles/styles.css" />
-    <title>Log In</title>
+    <title><%= method === 'sign-up' ? 'Sign Up' : 'Log In'%></title>
   </head>
   <body>
     <main class="authBg">
-      <form class="authBlock" action="/log-in" method="POST">
+      <form
+        class="authBlock"
+        action="/<%= method === 'sign-up' ? 'sign-up' : 'log-in'%>"
+        method="POST"
+      >
+        <a class="focusedButton" href="/">Go Back</a>
+
+        <%if(method === 'sign-up') {%>
+        <h3>Sign Up</h3>
+        <% } else {%>
         <h3>Log In</h3>
+        <% }%>
 
         <label for="username">Username</label>
         <input type="text" name="username" id="username" />
         <label for="password">Password</label>
         <input type="password" name="password" id="password" />
+        <% if(method === 'sign-up'){%>
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" name="confirmPassword" id="confirmPassword" />
+        <% }%>
+
         <input class="focusedButton" type="submit" value="Submit" />
+
+        <%if (method === 'sign-up'){%>
+        <p>
+          Registered already? <a class="focusedButton" href="/log-in">Log In</a>
+        </p>
+        <% } else {%>
+        <p>
+          Not registered yet?
+          <a class="focusedButton" href="/sign-up">Sign Up</a>
+        </p>
+        <%}%>
       </form>
     </main>
     <%- include("./partials/footer.ejs") %>
