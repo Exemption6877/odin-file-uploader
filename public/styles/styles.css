@@ -2,8 +2,10 @@
 
 :root {
   --main-fonts: Roboto, "Times New Roman";
-  --main-color: #00000000;
-  --secondary-color: #cfcfcf;
+  --main-color: #000000;
+  --secondary-color: #e0e0e0;
+  --main-font-color: #000000;
+  --secondary-font-color: #ffffff;
 }
 
 html,
@@ -22,4 +24,79 @@ a {
 
 ul {
   list-style: none;
+}
+
+/* Global items */
+
+main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.focusedButton {
+  background-color: var(--secondary-color);
+  color: var(--main-font-color);
+  font-weight: 800;
+  padding: 0.5rem 1rem;
+  border-radius: 5ch;
+}
+
+/* nav */
+nav {
+  display: flex;
+  width: 100%;
+  background-color: var(--main-color);
+  color: var(--secondary-font-color);
+  justify-content: center;
+  padding: 1rem;
+}
+
+.headerContent {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1000px;
+}
+
+.logoBlock {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-size: 1.3rem;
+}
+
+.logoBlock > img {
+  background-color: var(--secondary-font-color);
+  border-radius: 2ch;
+  width: 32px;
+}
+
+.headerLinks {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.headerLinks > li > a {
+  color: var(--secondary-font-color);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+#signUpButton {
+  color: var(--main-font-color);
+}
+
+/* footer */
+footer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  padding: 0.5rem;
+  font-weight: 700;
+  background-color: var(--main-color);
+  color: var(--secondary-font-color);
 }

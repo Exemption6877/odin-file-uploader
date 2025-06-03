@@ -1,0 +1,40 @@
+.authBg {
+  background-color: var(--main-color);
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.authBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: center;
+  background-color: var(--secondary-font-color);
+  width: 400px;
+  height: 500px;
+  justify-content: center;
+  border-radius: 5ch;
+}
+
+.authBlock > h3 {
+  font-size: 2rem;
+}
+
+.authBlock > label {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.authBlock > input {
+  width: 200px;
+  border-radius: 4ch;
+  padding-left: 1rem;
+}
+
+.authBlock > input[type="submit"] {
+  margin-top: 1rem;
+  cursor: pointer;
+  background-color: var(--main-color);
+  color: var(--secondary-font-color);
+}
