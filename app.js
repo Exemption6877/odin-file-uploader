@@ -14,8 +14,12 @@ const PORT = process.env.PORT || 3000;
 
 // Routers
 const authRouter = require("./routers/authRouter");
+const fileRouter = require("./routers/fileRouter");
 
 app.use("/", authRouter);
+app.use("/", fileRouter);
+
+// Server
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
