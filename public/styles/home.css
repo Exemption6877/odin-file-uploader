@@ -1,0 +1,54 @@
+#logOutButton {
+  color: var(--main-font-color);
+}
+
+main {
+  width: 100%;
+}
+
+.contentGrid {
+  display: grid;
+  gap: 2rem;
+  column-gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  width: 100%;
+  padding: 1rem;
+}
+
+.contentItem {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--secondary-color);
+  border-radius: 2ch;
+  align-items: center;
+  padding: 1rem;
+}
+
+.contentItem > img {
+  width: 100%;
+}
+
+.contentButtons {
+  display: flex;
+  align-self: center;
+  padding-top: 0.5rem;
+  gap: 1rem;
+}
+
+.contentButtons > .focusedButton {
+  background-color: var(--main-color);
+  color: var(--secondary-font-color);
+}
+
+/* Folders */
+.folders > a {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem;
+  color: var(--main-font-color);
+}
+
+.hidden {
+  display: none;
+}

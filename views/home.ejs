@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles/reset.css" />
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link rel="stylesheet" href="styles/home.css" />
+    <title>Home</title>
+  </head>
+  <body>
+    <%- include("./partials/nav.ejs") %>
+    <main>
+      <%- include ("./partials/folders.ejs") %>
+      <div class="contentGrid">
+        <% if(testArr.length > 0){ testArr.forEach(item => {%>
+        <div class="contentItem">
+          <img src="icons/default.svg" alt="<%=item.type%>" />
+          <p><%=item%></p>
+          <div class="contentButtons">
+            <a class="focusedButton" href="">Move</a>
+            <a class="focusedButton" href="">Delete</a>
+          </div>
+        </div>
+        <% }) }%>
+      </div>
+    </main>
+    <%- include("./partials/footer.ejs") %>
+  </body>
+</html>
