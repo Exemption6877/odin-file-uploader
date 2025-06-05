@@ -1,0 +1,33 @@
+datasource db {
+    provider = "postgresql"
+    url=env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+    id Int @id @default(autoincrement())
+    username String @unique
+    password String
+    files Files[]
+    folders Folders[]
+}
+
+model Files {
+    id Int @id @default(autoincrement())
+    link String
+    userId Int
+    user User @relation(fields: [userId], references: [id])
+    folderId Int?
+    folder Folders? @relation(fields: [folderId], references: [id])
+}
+
+model Folders {
+    id Int @id @default(autoincrement())
+    title String
+    files Files[]
+    userId Int
+    user User @relation(fields: [userId], references: [id])
+}
