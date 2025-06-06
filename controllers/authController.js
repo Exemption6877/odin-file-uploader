@@ -31,25 +31,16 @@ async function postSignUpUser(req, res) {
   }
 }
 
-async function postLoginUser(req, res) {
-  const { username, password } = req.body;
-
-  try {
-    const user = await db.getUserByName(username);
-    if (!user) {
-      return res.status(401).json({ error: "Credentials are incorrect" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: "Credentials are incorrect" });
-    }
-
+async function postLogOut(req, res, next) {
+  req.logout((err) => {
+    if (err) return next(err);
     res.redirect("/");
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send("Internal Server Error");
-  }
+  });
 }
 
-module.exports = { getLogIn, getSignUp, postSignUpUser, postLoginUser };
+module.exports = {
+  getLogIn,
+  getSignUp,
+  postSignUpUser,
+  postLogOut,
+};

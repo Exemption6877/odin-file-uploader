@@ -3,16 +3,35 @@ const { Router } = require("express");
 const authRouter = Router();
 
 const authController = require("../controllers/authController");
-const { body } = require("express-validator");
+const { body, validationResult } = require("express-validator");
+const passport = require("passport");
+
+//GETs
 
 authRouter.get("/log-in", authController.getLogIn);
 authRouter.get("/sign-up", authController.getSignUp);
 
+//POSTs
+
 authRouter.post(
   "/log-in",
-  [body("username").trim().notEmpty(), body("password").trim().notEmpty()],
-  authController.postLoginUser
+  [
+    body("username").trim().notEmpty(),
+    body("password").trim().notEmpty(),
+    (req, res, next) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      next();
+    },
+  ],
+  passport.authenticate("local", {
+    successRedirect: "/home",
+    failureRedirect: "/log-in",
+  })
 );
+
 authRouter.post(
   "/sign-up",
   [
@@ -30,5 +49,7 @@ authRouter.post(
   ],
   authController.postSignUpUser
 );
+
+authRouter.post("/log-out", authController.postLogOut);
 
 module.exports = authRouter;
