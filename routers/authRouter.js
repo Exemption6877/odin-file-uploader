@@ -6,10 +6,20 @@ const authController = require("../controllers/authController");
 const { body, validationResult } = require("express-validator");
 const passport = require("passport");
 
+// Auth checks
+
+function authCheck(req, res, next) {
+  if (req.isAuthenticated()) {
+    return res.redirect("/home");
+  }
+
+  next();
+}
+
 //GETs
 
-authRouter.get("/log-in", authController.getLogIn);
-authRouter.get("/sign-up", authController.getSignUp);
+authRouter.get("/log-in", authCheck, authController.getLogIn);
+authRouter.get("/sign-up", authCheck, authController.getSignUp);
 
 //POSTs
 
