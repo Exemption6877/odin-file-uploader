@@ -26,6 +26,23 @@ async function getUserByName(username) {
   }
 }
 
+async function getUserById(id) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new Error("Credentials are not correct");
+    }
+
+    return user;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 async function createUser(username, password) {
   try {
     const userExists = await prisma.user.findUnique({
@@ -48,4 +65,4 @@ async function createUser(username, password) {
   }
 }
 
-module.exports = { getUsers, getUserByName, createUser };
+module.exports = { getUsers, getUserByName, getUserById, createUser };
