@@ -13,8 +13,14 @@
     <main>
       <div class="landing">
         <h1>Upload & Share Your Files</h1>
-        <p>Quickly upload, view, and manage files in one place.</p>
 
+        <%if (isAuthenticated) {%>
+        <p>Welcome back <%=user.username %></p>
+        <ul class="authButtons">
+          <li><a class="focusedButton" href="/home">Home</a></li>
+        </ul>
+        <% } else { %>
+        <p>Quickly upload, view, and manage files in one place.</p>
         <ul class="authButtons">
           <li>
             <a class="focusedButton" href="/log-in">Log In</a>
@@ -23,6 +29,7 @@
             <a class="focusedButton" href="/sign-up">Sign Up</a>
           </li>
         </ul>
+        <% } %>
       </div>
     </main>
     <%- include("./partials/footer.ejs") %>

@@ -4,12 +4,22 @@
       <img src="icons/logo.svg" alt="logo" />
       <h3>File Uploader</h3>
     </div>
+    <%if (isAuthenticated) {%>
+    <p><%=user.username %></p>
 
+    <% } %>
     <ul class="headerLinks">
-      <%if (locals.isAuthenticated) {%>
+      <%if (isAuthenticated) {%>
       <li><a href="/home">Home</a></li>
       <li>
-        <a class="focusedButton" id="logOutButton" href="/log-out">Log Out</a>
+        <form action="/log-out" method="post">
+          <input
+            type="submit"
+            class="focusedButton"
+            id="logOutButton"
+            value="Log Out"
+          />
+        </form>
       </li>
       <% } else {%>
       <li><a href="/">Home</a></li>
