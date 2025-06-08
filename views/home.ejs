@@ -12,12 +12,35 @@
     <%- include("./partials/nav.ejs") %>
     <main>
       <%- include ("./partials/folders.ejs") %>
+      <form action="/add" method="post">
+        <button type="submit">Add new</button>
+      </form>
       <div class="contentGrid">
-        <% if(testArr.length > 0){ testArr.forEach(item => {%>
+        <div class="contentItem">
+          <img src="icons/logo.svg" alt="Upload File" />
+          <p>Add a file</p>
+          <form
+            action="/addfile"
+            method="post"
+            enctype="multipart/form-data"
+            class="uploadForm"
+          >
+            <input type="file" name="file" id="file" />
+            <input class="focusedButton" type="submit" value="Submit" />
+          </form>
+        </div>
+
+        <% if(files && files.length > 0){ files.forEach(item => {%>
         <div class="contentItem">
           <img src="icons/default.svg" alt="<%=item.type%>" />
-          <p><%=item%></p>
+          <p><%=item.name%></p>
           <div class="contentButtons">
+            <a
+              href="<%=item.path%>"
+              class="focusedButton"
+              download="<%=item.name%>"
+              >Download
+            </a>
             <a class="focusedButton" href="">Move</a>
             <a class="focusedButton" href="">Delete</a>
           </div>
