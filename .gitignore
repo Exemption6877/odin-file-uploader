@@ -1,3 +1,6 @@
+# File uploader
+uploads/
+
 # Logs
 logs
 *.log
