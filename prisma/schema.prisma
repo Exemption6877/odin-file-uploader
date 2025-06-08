@@ -17,7 +17,8 @@ model User {
 
 model Files {
     id Int @id @default(autoincrement())
-    link String
+    name String
+    path String
     userId Int
     user User @relation(fields: [userId], references: [id])
     folderId Int?

@@ -65,4 +65,39 @@ async function createUser(username, password) {
   }
 }
 
-module.exports = { getUsers, getUserByName, getUserById, createUser };
+async function addFile(name, path, userId) {
+  try {
+    await prisma.files.create({
+      data: {
+        name: name,
+        path: path,
+        userId: userId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+async function getFilesByUserId(userId) {
+  try {
+    return await prisma.files.findMany({
+      where: {
+        userId: userId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+module.exports = {
+  getUsers,
+  getUserByName,
+  getUserById,
+  createUser,
+  addFile,
+  getFilesByUserId,
+};
