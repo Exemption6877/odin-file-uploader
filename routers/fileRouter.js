@@ -39,6 +39,11 @@ fileRouter.get(
   authCheck,
   fileController.getFilesByFolder
 );
+fileRouter.get(
+  "/file/:fileId/details",
+  authCheck,
+  fileController.getFileDetails
+);
 
 // POSTs
 

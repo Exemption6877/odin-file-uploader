@@ -2,6 +2,20 @@ const db = require("../prisma/queries");
 const { unlink } = require("node:fs");
 const { format } = require("date-fns");
 
+function fileSize(size, prefferedType) {
+  const KB = size / 1024;
+
+  if (prefferedType === "Kb") {
+    return `${KB.toFixed(2)} Kb`;
+  }
+
+  const MB = KB / 1024;
+
+  if (prefferedType === "Mb") {
+    return `${MB.toFixed(2)} Mb`;
+  }
+}
+
 function filetype(typeExt) {
   const arr = [];
   for (let i = 0; i < typeExt.length - 1; i++) {
@@ -95,15 +109,24 @@ async function postUpload(req, res) {
     const filename = formattedDate + `-` + req.file.originalname;
     const filepath = req.file.path;
     const filetype = req.file.mimetype;
+    const filesize = req.file.size;
     const userId = req.user.id;
     const date = new Date();
     const foldername = req.params.foldername;
 
     if (foldername) {
-      await db.addFile(filename, filetype, filepath, userId, date, foldername);
+      await db.addFile(
+        filename,
+        filetype,
+        filesize,
+        filepath,
+        userId,
+        date,
+        foldername
+      );
       res.redirect(`/folder/${foldername}`);
     } else {
-      await db.addFile(filename, filetype, filepath, userId, date);
+      await db.addFile(filename, filetype, filesize, filepath, userId, date);
       res.redirect("/home");
     }
   } catch (err) {
@@ -176,6 +199,26 @@ async function postFiletoFolder(req, res) {
   }
 }
 
+async function getFileDetails(req, res) {
+  try {
+    const userId = req.user.id;
+    const fileId = Number(req.params.fileId);
+
+    let file = await db.getFile(userId, fileId);
+    file = {
+      ...file,
+      filetype: filetype(file.type),
+      formattedDate: format(file.creationDate, "dd-MMMM-yy"),
+      formattedTime: format(file.creationDate, "HH:mm:ss"),
+      formattedSize: fileSize(file.size, "Mb"),
+    };
+
+    res.render("filedetails", { file: file });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 module.exports = {
   getMainPage,
   getHomePage,
@@ -189,4 +232,5 @@ module.exports = {
   postDeleteFile,
   postRenameFile,
   postFiletoFolder,
+  getFileDetails,
 };
