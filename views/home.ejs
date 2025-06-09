@@ -3,51 +3,66 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles/reset.css" />
-    <link rel="stylesheet" href="styles/styles.css" />
-    <link rel="stylesheet" href="styles/home.css" />
+    <link rel="stylesheet" href="/styles/reset.css" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/styles/home.css" />
     <title>Home</title>
   </head>
+
   <body>
     <%- include("./partials/nav.ejs") %>
     <main>
-      <%- include ("./partials/folders.ejs") %>
-      <form action="/add" method="post">
-        <button type="submit">Add new</button>
-      </form>
-      <div class="contentGrid">
-        <div class="contentItem">
-          <img src="icons/logo.svg" alt="Upload File" />
-          <p>Add a file</p>
-          <form
-            action="/addfile"
-            method="post"
-            enctype="multipart/form-data"
-            class="uploadForm"
-          >
-            <input type="file" name="file" id="file" />
-            <input class="focusedButton" type="submit" value="Submit" />
-          </form>
-        </div>
-
-        <% if(files && files.length > 0){ files.forEach(item => {%>
-        <div class="contentItem">
-          <img src="icons/default.svg" alt="<%=item.type%>" />
-          <p><%=item.name%></p>
-          <div class="contentButtons">
-            <a
-              href="<%=item.path%>"
-              class="focusedButton"
-              download="<%=item.name%>"
-              >Download
-            </a>
-            <a class="focusedButton" href="">Move</a>
-            <a class="focusedButton" href="">Delete</a>
-          </div>
-        </div>
-        <% }) }%>
+      <div class="addNew">
+        <%- include ("./partials/addfolder.ejs") %> <%-
+        include("./partials/addfile.ejs") %>
       </div>
+      <%if (locals.foldername){%>
+      <h2 class="foldername">Folder: <%=foldername%></h2>
+      <% } %> <% if (!locals.outputFolders &&(files && files.length===0)){%>
+      <h3 class="foldername">No files here yet!</h3>
+      <% } %>
+
+      <div class="contentGrid">
+        <% if (!locals.outputFolders){%>
+        <div class="contentItem goBack">
+          <a href="/home" class="focusedButton"> Go Back</a>
+        </div>
+        <%}%>
+
+        <!-- Render Folders-->
+        <%- include("./partials/renderfolders.ejs")%>
+
+        <!-- Render File-->
+        <%- include("./partials/renderfiles.ejs")%>
+      </div>
+      <div class="focus hidden" onclick="hideAllModals()"></div>
     </main>
     <%- include("./partials/footer.ejs") %>
   </body>
+  <script>
+    function toggleAddModal(method) {
+      const modal = document.querySelector(`.${method}`);
+      const focus = document.querySelector(".focus");
+
+      modal.classList.toggle("hidden");
+      focus.classList.toggle("hidden");
+    }
+
+    function toggleModal(method, id) {
+      const modal = document.querySelector(`.${method}-${id}`);
+      const focus = document.querySelector(".focus");
+
+      modal.classList.toggle("hidden");
+      focus.classList.toggle("hidden");
+    }
+
+    function hideAllModals() {
+      const modals = document.querySelectorAll(".modal");
+      modals.forEach((modal) => {
+        modal.classList.add("hidden");
+      });
+      const focus = document.querySelector(".focus");
+      focus.classList.toggle("hidden");
+    }
+  </script>
 </html>

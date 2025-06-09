@@ -1,0 +1,13 @@
+<div class="add-wrapper">
+  <button class="focusedButton" onclick="toggleAddModal('addFolder')">
+    Add Folder
+  </button>
+</div>
+<!-- Add folder-->
+<div class="modal addFolder hidden">
+  <form action="/create/folder" method="post">
+    <label for="folder">Name your folder:</label>
+    <input type="text" name="folder" id="folder" />
+    <input class="focusedButton" type="submit" value="Submit" />
+  </form>
+</div>

@@ -1,0 +1,35 @@
+      <% if ( locals.outputFolders && locals.folders && folders.length> 0) {%>
+      <% folders.forEach(folder=>{%>
+
+      <div class="contentItem folder">
+        <form action="/folder/<%=folder.title%>" method="get">
+          <img src="/icons/folder.svg" alt="Folder" onclick="submit()" />
+        </form>
+        <p class="entry-name">
+          <%=folder.title%> (<%=folder._count.files%>)
+        </p>
+        <div class="contentButtons">
+          <button class="focusedButton" onclick="toggleModal('deleteFolder', '<%= folder.id %>')">Delete</button>
+          <button class="focusedButton" onclick="toggleModal('renameFolder', '<%= folder.id %>')">Rename</button>
+        </div>
+        <!-- Rename Folder -->
+
+        <div class="modal rename renameFolder-<%=folder.id%> hidden ">
+          <form action="/folder/<%=folder.id%>/edit" method="post">
+            <label for="renameFolder">Rename Folder: </label>
+            <input type="text" name="renameFolder">
+            <button type="submit" class="focusedButton">Rename</button>
+          </form>
+
+        </div>
+        <!-- Delete Folder -->
+        <div class="modal delete deleteFolder-<%=folder.id%> hidden ">
+          <form action="/folder/<%=folder.id%>/delete" method="post">
+            <p>Are you sure you want to delete this folder?</p>
+            <button type="submit" class="focusedButton">Delete</button>
+          </form>
+        </div>
+        </form>
+      </div>
+      <% })%>
+      <% }%>

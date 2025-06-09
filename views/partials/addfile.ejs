@@ -1,0 +1,15 @@
+      <div class="add-wrapper">
+        <button class="focusedButton" onclick="toggleAddModal('addFile')">Add File</button>
+      </div>
+      <!-- Add File -->
+      <div class="modal addFile hidden">
+        <% if (locals.outputFolders) {%>
+        <form action="/create/file" method="post" enctype="multipart/form-data" class="uploadForm">
+          <% } else {%>
+          <form action="/create/file/<%=foldername%>" method="post" enctype="multipart/form-data" class="uploadForm">
+            <% } %>
+            <label for="file">Upload your file: </label>
+            <input type="file" name="file" id="file" />
+            <input class="focusedButton" type="submit" value="Submit" />
+          </form>
+      </div>
