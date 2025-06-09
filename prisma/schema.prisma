@@ -18,11 +18,14 @@ model User {
 model Files {
     id Int @id @default(autoincrement())
     name String
+    type String
     path String
     userId Int
+    creationDate DateTime
     user User @relation(fields: [userId], references: [id])
     folderId Int?
     folder Folders? @relation(fields: [folderId], references: [id])
+    @@unique([userId, name])
 }
 
 model Folders {
@@ -31,6 +34,7 @@ model Folders {
     files Files[]
     userId Int
     user User @relation(fields: [userId], references: [id])
+    @@unique([userId, title])
 }
 
 model Session {

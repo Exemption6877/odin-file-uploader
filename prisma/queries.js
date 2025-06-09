@@ -1,13 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-async function getUsers() {
-  try {
-    return await prisma.user.findMany();
-  } catch (err) {
-    console.log(err);
-  }
-}
+// User Functions
 
 async function getUserByName(username) {
   try {
@@ -53,7 +47,7 @@ async function createUser(username, password) {
       throw new Error("User already exists");
     }
 
-    return await prisma.user.create({
+    await prisma.user.create({
       data: {
         username: username,
         password: password,
@@ -65,15 +59,111 @@ async function createUser(username, password) {
   }
 }
 
-async function addFile(name, path, userId) {
+// Folder Functions
+
+async function addFolder(userId, title) {
   try {
-    await prisma.files.create({
+    return await prisma.folders.create({
       data: {
-        name: name,
-        path: path,
+        title: title,
         userId: userId,
       },
     });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function getFoldersByUserId(userId) {
+  try {
+    return await prisma.folders.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        _count: {
+          select: { files: true },
+        },
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function getFolder(userId, foldername) {
+  try {
+    return await prisma.folders.findFirst({
+      where: {
+        userId: userId,
+        title: foldername,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function renameFolder(userId, folderId, title) {
+  try {
+    return await prisma.folders.update({
+      where: {
+        userId: userId,
+        id: folderId,
+      },
+      data: {
+        title: title,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function deleteFolder(userId, folderId) {
+  try {
+    return await prisma.folders.delete({
+      where: {
+        userId: userId,
+        id: folderId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// File Functions
+
+async function addFile(name, type, path, userId, date, foldername) {
+  try {
+    const file = await prisma.files.create({
+      data: {
+        name: name,
+        type: type,
+        path: path,
+        userId: userId,
+        creationDate: date,
+      },
+    });
+    if (foldername) {
+      const folder = await prisma.folders.findFirst({
+        where: {
+          userId: userId,
+          title: foldername,
+        },
+      });
+
+      await prisma.files.update({
+        where: {
+          userId: userId,
+          id: file.id,
+        },
+        data: {
+          folderId: folder.id,
+        },
+      });
+    }
   } catch (err) {
     console.log(err);
     throw err;
@@ -85,6 +175,7 @@ async function getFilesByUserId(userId) {
     return await prisma.files.findMany({
       where: {
         userId: userId,
+        folderId: null,
       },
     });
   } catch (err) {
@@ -93,11 +184,96 @@ async function getFilesByUserId(userId) {
   }
 }
 
+async function getFilesByFolder(userId, foldername) {
+  try {
+    return await prisma.files.findMany({
+      where: {
+        userId: userId,
+        folder: {
+          title: foldername,
+        },
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function getFile(userId, fileId) {
+  try {
+    return await prisma.files.findFirst({
+      where: {
+        userId: userId,
+        id: fileId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function renameFile(userId, fileId, name) {
+  try {
+    return await prisma.files.update({
+      where: {
+        id: fileId,
+        userId: userId,
+      },
+      data: {
+        name: name,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function deleteFile(userId, fileId) {
+  try {
+    return await prisma.files.delete({
+      where: {
+        id: fileId,
+        userId: userId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function addFiletoFolder(userId, folderId, fileId) {
+  try {
+    return await prisma.files.update({
+      where: {
+        userId: userId,
+        id: fileId,
+      },
+      data: {
+        folderId: folderId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 module.exports = {
-  getUsers,
+  // User
   getUserByName,
   getUserById,
   createUser,
+  // Folder
+  addFolder,
+  getFoldersByUserId,
+  getFolder,
+  renameFolder,
+  deleteFolder,
+  // File
   addFile,
   getFilesByUserId,
+  getFilesByFolder,
+  getFile,
+  renameFile,
+  deleteFile,
+  addFiletoFolder,
 };
