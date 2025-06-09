@@ -3,6 +3,8 @@ const { Router } = require("express");
 const fileRouter = Router();
 const fileController = require("../controllers/fileController");
 
+// Multer
+
 const path = require("path");
 const multer = require("multer");
 
@@ -17,6 +19,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// Custom middlewares
+
 function authCheck(req, res, next) {
   if (!req.isAuthenticated()) {
     return res.redirect("/");
@@ -30,8 +34,34 @@ function authCheck(req, res, next) {
 fileRouter.get("/", fileController.getMainPage);
 fileRouter.get("/home", authCheck, fileController.getHomePage);
 
+fileRouter.get(
+  "/folder/:foldername",
+  authCheck,
+  fileController.getFilesByFolder
+);
+
 // POSTs
 
-fileRouter.post("/addfile", upload.single("file"), fileController.postUpload);
+// file
+fileRouter.post(
+  "/create/file",
+  upload.single("file"),
+  fileController.postUpload
+);
+
+fileRouter.post(
+  "/create/file/:foldername",
+  upload.single("file"),
+  fileController.postUpload
+);
+
+fileRouter.post("/file/:fileId/edit", fileController.postRenameFile);
+fileRouter.post("/file/:fileId/delete", fileController.postDeleteFile);
+fileRouter.post("/file/:fileId/move", fileController.postFiletoFolder);
+
+// folder
+fileRouter.post("/create/folder", fileController.postAddFolder);
+fileRouter.post("/folder/:folderId/edit", fileController.postRenameFolder);
+fileRouter.post("/folder/:folderId/delete", fileController.postDeleteFolder);
 
 module.exports = fileRouter;
