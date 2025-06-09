@@ -1,7 +1,7 @@
       <% if(files && files.length> 0) {%>
       <% files.forEach(item=> {%>
       <div class="contentItem">
-        <img src="/icons/default.svg" alt="<%=item.type%>" />
+        <img src="/icons/<%=item.filetype%>.svg" alt="<%=item.type%>" />
         <p class="entry-name">
           <%=item.name%>
         </p>

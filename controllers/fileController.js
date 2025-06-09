@@ -2,6 +2,19 @@ const db = require("../prisma/queries");
 const { unlink } = require("node:fs");
 const { format } = require("date-fns");
 
+function filetype(typeExt) {
+  const arr = [];
+  for (let i = 0; i < typeExt.length - 1; i++) {
+    if (typeExt[i] === "/") {
+      break;
+    }
+
+    arr.push(typeExt[i]);
+  }
+
+  return arr.join("");
+}
+
 // General
 async function getMainPage(req, res) {
   res.render("index");
@@ -11,7 +24,8 @@ async function getHomePage(req, res) {
   try {
     const userId = req.user.id;
     const folders = await db.getFoldersByUserId(userId);
-    const files = await db.getFilesByUserId(userId);
+    let files = await db.getFilesByUserId(userId);
+    files = files.map((file) => ({ ...file, filetype: filetype(file.type) }));
     res.render("home", { files: files, folders: folders, outputFolders: true });
   } catch (err) {
     console.log(err);
@@ -59,7 +73,9 @@ async function getFilesByFolder(req, res) {
     const userId = req.user.id;
     const foldername = req.params.foldername;
     const folders = await db.getFoldersByUserId(userId);
-    const files = await db.getFilesByFolder(userId, foldername);
+    let files = await db.getFilesByFolder(userId, foldername);
+    files = files.map((file) => ({ ...file, filetype: filetype(file.type) }));
+
     res.render("home", {
       files: files,
       folders: folders,
