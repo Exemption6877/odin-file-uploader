@@ -1,4 +1,5 @@
-#logOutButton {
+#logOutButton,
+.folders > a {
   color: var(--main-font-color);
 }
 
@@ -19,14 +20,6 @@ main {
   justify-content: center;
 }
 
-.contentItem > .contentButtons {
-  display: none;
-}
-
-.contentItem:hover > .contentButtons {
-  display: flex;
-}
-
 .contentItem {
   display: flex;
   flex-direction: column;
@@ -35,9 +28,17 @@ main {
   align-items: center;
   padding: 1rem;
 }
-
-.contentItem > img {
+.contentItem > img,
+.folder img {
   width: 120px;
+  cursor: pointer;
+}
+
+.contentItem > .contentButtons {
+  display: none;
+}
+.contentItem:hover > .contentButtons {
+  display: flex;
 }
 
 .contentButtons {
@@ -49,35 +50,31 @@ main {
   flex-wrap: wrap;
   justify-content: center;
 }
-
 .contentButtons > .focusedButton {
   background-color: var(--main-color);
   color: var(--secondary-font-color);
   min-width: 100px;
 }
 
-/* Folders */
-.folders > a {
-  display: flex;
-  gap: 1rem;
-  margin: 1rem;
-  color: var(--main-font-color);
-}
-
 /* Upload form */
-
-.uploadForm {
+.uploadForm,
+.modal > form,
+.folder > form {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
+}
+.uploadForm {
   width: 100%;
   margin-top: auto;
-  gap: 0.5rem;
 }
-
 .uploadForm input[type="file"] {
   width: 100%;
   font-size: 0.9rem;
+}
+.folder > form {
+  height: 120px;
 }
 
 /* Modals */
@@ -99,7 +96,6 @@ main {
   padding: 2rem;
   gap: 1rem;
 }
-
 .focus {
   background-color: #00000050;
   position: fixed;
@@ -109,27 +105,12 @@ main {
   height: 100vh;
   z-index: 1000;
 }
-
-.modal > form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+.modal form input[type="text"] {
+  border-radius: 2ch;
+  padding-left: 1rem;
 }
 
-/* Folders */
-.folder > form {
-  display: flex;
-  flex-direction: column;
-  height: 120px;
-  align-items: center;
-}
-
-.folder img {
-  width: 120px;
-  cursor: pointer;
-}
-
+/* Folder buttons */
 .folder button {
   background-color: var(--secondary-color);
   border: none;
@@ -137,13 +118,7 @@ main {
   cursor: pointer;
 }
 
-.modal form input[type="text"] {
-  border-radius: 2ch;
-  padding-left: 1rem;
-}
-
 /* Add new */
-
 .addNew {
   display: flex;
   width: 100%;
@@ -162,4 +137,12 @@ main {
   white-space: normal;
   overflow-wrap: break-word;
   word-break: break-word;
+}
+
+.goBack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
