@@ -19,6 +19,7 @@ model Files {
     id Int @id @default(autoincrement())
     name String
     type String
+    size Int
     path String
     userId Int
     creationDate DateTime

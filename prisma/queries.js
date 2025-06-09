@@ -135,12 +135,13 @@ async function deleteFolder(userId, folderId) {
 
 // File Functions
 
-async function addFile(name, type, path, userId, date, foldername) {
+async function addFile(name, type, size, path, userId, date, foldername) {
   try {
     const file = await prisma.files.create({
       data: {
         name: name,
         type: type,
+        size: size,
         path: path,
         userId: userId,
         creationDate: date,
@@ -205,6 +206,13 @@ async function getFile(userId, fileId) {
       where: {
         userId: userId,
         id: fileId,
+      },
+      include: {
+        folder: {
+          select: {
+            title: true,
+          },
+        },
       },
     });
   } catch (err) {
