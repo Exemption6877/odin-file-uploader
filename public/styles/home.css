@@ -6,17 +6,28 @@ main {
   width: 100%;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .contentGrid {
   display: grid;
   gap: 2rem;
   column-gap: 2rem;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  width: 100%;
+  grid-template-columns: repeat(auto-fill, min(350px));
   padding: 1rem;
+  justify-content: center;
+}
+
+.contentItem > .contentButtons {
+  display: none;
+}
+
+.contentItem:hover > .contentButtons {
+  display: flex;
 }
 
 .contentItem {
-  aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
   background-color: var(--secondary-color);
@@ -26,19 +37,23 @@ main {
 }
 
 .contentItem > img {
-  width: 100%;
+  width: 120px;
 }
 
 .contentButtons {
   display: flex;
   align-self: center;
   padding-top: 0.5rem;
+  margin-top: auto;
   gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .contentButtons > .focusedButton {
   background-color: var(--main-color);
   color: var(--secondary-font-color);
+  min-width: 100px;
 }
 
 /* Folders */
@@ -47,10 +62,6 @@ main {
   gap: 1rem;
   margin: 1rem;
   color: var(--main-font-color);
-}
-
-.hidden {
-  display: none;
 }
 
 /* Upload form */
@@ -67,4 +78,88 @@ main {
 .uploadForm input[type="file"] {
   width: 100%;
   font-size: 0.9rem;
+}
+
+/* Modals */
+.modal {
+  background-color: var(--main-color);
+  color: var(--secondary-font-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  width: 400px;
+  height: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  border-radius: 5ch;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+.focus {
+  background-color: #00000050;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+}
+
+.modal > form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Folders */
+.folder > form {
+  display: flex;
+  flex-direction: column;
+  height: 120px;
+  align-items: center;
+}
+
+.folder img {
+  width: 120px;
+  cursor: pointer;
+}
+
+.folder button {
+  background-color: var(--secondary-color);
+  border: none;
+  margin-bottom: auto;
+  cursor: pointer;
+}
+
+.modal form input[type="text"] {
+  border-radius: 2ch;
+  padding-left: 1rem;
+}
+
+/* Add new */
+
+.addNew {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.foldername {
+  align-self: center;
+}
+
+.entry-name {
+  font-weight: 800;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
