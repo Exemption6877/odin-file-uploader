@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/reset.css" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/styles/filedetails.css" />
+
+    <title>Home</title>
+  </head>
+  <body>
+    <%- include("./partials/nav.ejs") %>
+    <main>
+      <div class="file">
+        <% if (file.filetype === 'image' ) {%>
+        <img src="/<%=file.path%>" class="fileOutput" alt="image" />
+        <%} else if (file.filetype === 'video') {%>
+
+        <video controls width="640" class="fileOutput">
+          <source src="/<%= file.path %>" type="<%= file.type %>" />
+          Your browser does not support the video tag.
+        </video>
+
+        <%} else if (file.filetype === 'audio') {%>
+        <audio controls>
+          <source src="/<%=file.path%>" type="<%=file.type%>" />
+          Your browser does not support the audio element.
+        </audio>
+
+        <% } %>
+        <div class="text-block">
+          <p>Name: <%=file.name%></p>
+          <p>Filesize: <%=file.formattedSize%></p>
+          <p>
+            Date created: <%=file.formattedDate%> at <%=file.formattedTime%>
+          </p>
+
+          <p>
+            Current folder: <%= file.folder && file.folder.title.length > 0 ?
+            file.folder.title : "No Folder" %>
+          </p>
+        </div>
+
+        <a href="/<%= file.path %>" class="focusedButton black" download
+          >Download</a
+        >
+
+        <a
+          class="focusedButton black"
+          href="/<%=file.folder && file.folder.title.length > 0 ? 'folder/' + file.folder.title : 'home' %>"
+          >Go Back</a
+        >
+      </div>
+    </main>
+    <%- include("./partials/footer.ejs") %>
+  </body>
+</html>

@@ -42,6 +42,7 @@ main {
   padding: 0.5rem 1rem;
   border-radius: 5ch;
   cursor: pointer;
+  text-align: center;
 }
 
 /* nav */
