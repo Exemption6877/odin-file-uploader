@@ -14,17 +14,17 @@
     <main>
       <div class="file">
         <% if (file.filetype === 'image' ) {%>
-        <img src="/<%=file.path%>" class="fileOutput" alt="image" />
+        <img src="<%=file.path%>" class="fileOutput" alt="image" />
         <%} else if (file.filetype === 'video') {%>
 
         <video controls width="640" class="fileOutput">
-          <source src="/<%= file.path %>" type="<%= file.type %>" />
+          <source src="<%= file.path %>" type="<%= file.type %>" />
           Your browser does not support the video tag.
         </video>
 
         <%} else if (file.filetype === 'audio') {%>
         <audio controls>
-          <source src="/<%=file.path%>" type="<%=file.type%>" />
+          <source src="<%=file.path%>" type="<%=file.type%>" />
           Your browser does not support the audio element.
         </audio>
 
@@ -46,7 +46,7 @@
           <%}%>
         </div>
 
-        <a href="/<%= file.path %>" class="focusedButton black" download
+        <a href="<%= file.path %>" class="focusedButton black" download
           >Download</a
         >
         <% if(!locals.shared || !shared){%>

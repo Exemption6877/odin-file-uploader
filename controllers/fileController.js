@@ -41,7 +41,13 @@ async function getHomePage(req, res) {
     const userId = req.user.id;
     const folders = await db.getFoldersByUserId(userId);
     let files = await db.getFilesByUserId(userId);
-    files = files.map((file) => ({ ...file, filetype: filetype(file.type) }));
+    files = await Promise.all(
+      files.map(async (file) => ({
+        ...file,
+        path: await cloud.getUrl(file.path),
+        filetype: filetype(file.type),
+      }))
+    );
     res.render("home", { files: files, folders: folders, outputFolders: true });
   } catch (err) {
     console.log(err);
@@ -90,7 +96,13 @@ async function getFilesByFolder(req, res) {
     const foldername = req.params.foldername;
     const folders = await db.getFoldersByUserId(userId);
     let files = await db.getFilesByFolder(userId, foldername);
-    files = files.map((file) => ({ ...file, filetype: filetype(file.type) }));
+    files = await Promise.all(
+      files.map(async (file) => ({
+        ...file,
+        path: await cloud.getUrl(file.path),
+        filetype: filetype(file.type),
+      }))
+    );
 
     res.render("home", {
       files: files,
@@ -108,7 +120,8 @@ async function postUpload(req, res) {
   try {
     const now = new Date();
     const formattedDate = format(now, "dd-MM-yy_HH:mm:ss");
-    const filename = formattedDate + `-` + req.file.originalname;
+    const safeOriginal = req.file.originalname.replace(/\s+/g, "_");
+    const filename = `${formattedDate}-${safeOriginal}`;
     const filepath = req.file.path;
     const filetype = req.file.mimetype;
     const filesize = req.file.size;
@@ -116,21 +129,21 @@ async function postUpload(req, res) {
     const date = new Date();
     const foldername = req.params.foldername;
 
+    const { path } = await cloud.uploadFile(req.file);
+
     if (foldername) {
       await db.addFile(
         filename,
         filetype,
         filesize,
-        filepath,
+        path,
         userId,
         date,
         foldername
       );
-      await cloud.uploadFile(req.file);
       res.redirect(`/folder/${foldername}`);
     } else {
-      await db.addFile(filename, filetype, filesize, filepath, userId, date);
-      await cloud.uploadFile(req.file);
+      await db.addFile(filename, filetype, filesize, path, userId, date);
       res.redirect("/home");
     }
   } catch (err) {
@@ -150,6 +163,8 @@ async function postDeleteFile(req, res) {
 
     await db.deleteFile(userId, fileId);
     const foldername = req.query.foldername;
+
+    await cloud.deleteFile(file.path);
 
     if (foldername) {
       res.redirect(`/folder/${foldername}`);
@@ -215,6 +230,7 @@ async function getFileDetails(req, res) {
       formattedDate: format(file.creationDate, "dd-MMMM-yy"),
       formattedTime: format(file.creationDate, "HH:mm:ss"),
       formattedSize: fileSize(file.size, "Mb"),
+      path: await cloud.getUrl(file.path),
     };
 
     res.render("filedetails", { file: file, shared: false });
@@ -256,10 +272,13 @@ async function getShareFolder(req, res) {
       res.json("Link does not exist / expired");
     }
 
-    shared.folder.files = shared.folder.files.map((file) => ({
-      ...file,
-      filetype: filetype(file.type),
-    }));
+    shared.folder.files = Promise.all(
+      shared.folder.files.map(async (file) => ({
+        ...file,
+        filetype: filetype(file.type),
+        path: await cloud.getUrl(file.path),
+      }))
+    );
 
     const now = new Date();
     // const now = new Date("2025-06-15T12:00:00Z");
@@ -288,13 +307,16 @@ async function getShareDetails(req, res) {
 
     const shared = await db.getSharedFile(uuid, fileId);
 
-    shared.folder.files = shared.folder.files.map((file) => ({
-      ...file,
-      filetype: filetype(file.type),
-      formattedDate: format(file.creationDate, "dd-MMMM-yy"),
-      formattedTime: format(file.creationDate, "HH:mm:ss"),
-      formattedSize: fileSize(file.size, "Mb"),
-    }));
+    shared.folder.files = await Promise.all(
+      shared.folder.files.map(async (file) => ({
+        ...file,
+        filetype: filetype(file.type),
+        formattedDate: format(file.creationDate, "dd-MMMM-yy"),
+        formattedTime: format(file.creationDate, "HH:mm:ss"),
+        formattedSize: fileSize(file.size, "Mb"),
+        path: await cloud.getUrl(file.path),
+      }))
+    );
 
     console.log(shared.folder.files[0]);
     res.render("filedetails", {
