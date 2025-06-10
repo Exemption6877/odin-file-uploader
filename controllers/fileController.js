@@ -279,7 +279,7 @@ async function getShareFolder(req, res) {
       res.json("Link does not exist / expired");
     }
 
-    shared.folder.files = Promise.all(
+    shared.folder.files = await Promise.all(
       shared.folder.files.map(async (file) => ({
         ...file,
         filetype: filetype(file.type),
