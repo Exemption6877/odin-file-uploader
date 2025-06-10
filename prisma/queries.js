@@ -265,6 +265,63 @@ async function addFiletoFolder(userId, folderId, fileId) {
   }
 }
 
+async function addSharedFolder(userId, uuid, folderId, expDate) {
+  try {
+    return await prisma.sharedFolder.create({
+      data: {
+        uuid: uuid,
+        folderId: folderId,
+        userId: userId,
+        expDate: expDate,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function getSharedFolder(uuid) {
+  try {
+    return await prisma.sharedFolder.findUnique({
+      where: {
+        uuid: uuid,
+      },
+      include: {
+        folder: {
+          include: {
+            files: true,
+          },
+        },
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function getSharedFile(uuid, fileId) {
+  try {
+    return await prisma.sharedFolder.findUnique({
+      where: {
+        uuid: uuid,
+      },
+      include: {
+        folder: {
+          include: {
+            files: {
+              where: {
+                id: fileId,
+              },
+            },
+          },
+        },
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 module.exports = {
   // User
   getUserByName,
@@ -284,4 +341,8 @@ module.exports = {
   renameFile,
   deleteFile,
   addFiletoFolder,
+  // share
+  addSharedFolder,
+  getSharedFolder,
+  getSharedFile,
 };

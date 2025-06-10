@@ -8,39 +8,51 @@ generator client {
 }
 
 model User {
-    id Int @id @default(autoincrement())
-    username String @unique
-    password String
-    files Files[]
-    folders Folders[]
+    id            Int              @id @default(autoincrement())
+    username      String           @unique
+    password      String
+    files         Files[]
+    folders       Folders[]
+    sharedFolders SharedFolder[]
 }
 
 model Files {
-    id Int @id @default(autoincrement())
-    name String
-    type String
-    size Int
-    path String
-    userId Int
+    id           Int         @id @default(autoincrement())
+    name         String
+    type         String
+    size         Int
+    path         String
+    userId       Int
     creationDate DateTime
-    user User @relation(fields: [userId], references: [id])
-    folderId Int?
-    folder Folders? @relation(fields: [folderId], references: [id])
+    user         User        @relation(fields: [userId], references: [id])
+    folderId     Int?
+    folder       Folders?    @relation(fields: [folderId], references: [id])
     @@unique([userId, name])
 }
 
 model Folders {
-    id Int @id @default(autoincrement())
-    title String
-    files Files[]
-    userId Int
-    user User @relation(fields: [userId], references: [id])
+    id      Int              @id @default(autoincrement())
+    title   String
+    files   Files[]
+    userId  Int
+    user    User             @relation(fields: [userId], references: [id])
+    shares  SharedFolder?
     @@unique([userId, title])
 }
 
+model SharedFolder {
+  id        Int       @id @default(autoincrement())
+  uuid      String    @unique
+  folderId  Int       @unique
+  folder    Folders   @relation(fields: [folderId], references: [id])
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  expDate   DateTime
+}
+
 model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String
+  id          String   @id
+  sid         String   @unique
+  data        String
   expiresAt   DateTime
 }
