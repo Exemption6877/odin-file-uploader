@@ -12,18 +12,19 @@
   <body>
     <%- include("./partials/nav.ejs") %>
     <main>
+      <% if (!locals.shared || !shared){%>
       <div class="addNew">
         <%- include ("./partials/addfolder.ejs") %> <%-
         include("./partials/addfile.ejs") %>
       </div>
-      <%if (locals.foldername){%>
+      <% }%> <%if (locals.foldername){%>
       <h2 class="foldername">Folder: <%=foldername%></h2>
       <% } %> <% if (!locals.outputFolders &&(files && files.length===0)){%>
       <h3 class="foldername">No files here yet!</h3>
       <% } %>
 
       <div class="contentGrid">
-        <% if (!locals.outputFolders){%>
+        <% if (!locals.outputFolders && (!locals.shared || !shared)){%>
         <div class="contentItem goBack">
           <a href="/home" class="focusedButton"> Go Back</a>
         </div>

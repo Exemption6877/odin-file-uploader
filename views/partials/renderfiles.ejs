@@ -6,8 +6,10 @@
           <%=item.name%>
         </p>
         <div class="contentButtons">
-          <a href="/<%=item.path%>" class="focusedButton" download="<%=item.name%>">Download
+                    <a href="/<%=item.path%>" class="focusedButton" download="<%=item.name%>">Download
           </a>
+          <%if (!locals.shared || !shared) {%>
+
           <button class="focusedButton" onclick="toggleModal('moveFile', '<%=item.id%>')">
             Move
           </button>
@@ -19,12 +21,15 @@
           </button>
 
           <a class="focusedButton" href="/file/<%=item.id%>/details">Details</a>
+          <%} else {%>
+            <a class="focusedButton" href="/folder/share/<%=uuid%>/file/<%=item.id%>/details">Details</a>
+           <%} %>
+
         </div>
 
         <!-- Modals -->
-
-        <!-- Rename File -->
-        <div class="modal rename renameFile-<%=item.id%> hidden">
+        <% if (!locals.shared || !shared){ %>       
+           <div class="modal rename renameFile-<%=item.id%> hidden">
           <% if (locals.foldername) {%>
           <form action="/file/<%=item.id%>/edit?foldername=<%=foldername%>" method="post">
 
@@ -74,6 +79,8 @@
               <p>Are you sure you want to delete this file?</p>
               <button type="submit" class="focusedButton">Delete</button>
             </form>
-        </div>
+        </div> <%}%>
+        <!-- Rename File -->
+
       </div>
       <%})}%>

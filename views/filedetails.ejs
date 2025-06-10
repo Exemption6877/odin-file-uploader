@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/styles/styles.css" />
     <link rel="stylesheet" href="/styles/filedetails.css" />
 
-    <title>Home</title>
+    <title>File Details</title>
   </head>
   <body>
     <%- include("./partials/nav.ejs") %>
@@ -35,22 +35,31 @@
           <p>
             Date created: <%=file.formattedDate%> at <%=file.formattedTime%>
           </p>
-
+          <%if(!locals.shared || !shared){%>
           <p>
             Current folder: <%= file.folder && file.folder.title.length > 0 ?
             file.folder.title : "No Folder" %>
           </p>
+          <%} else {%>
+          <p>Current folder: <%=sharedFolder %></p>
+
+          <%}%>
         </div>
 
         <a href="/<%= file.path %>" class="focusedButton black" download
           >Download</a
         >
-
+        <% if(!locals.shared || !shared){%>
         <a
           class="focusedButton black"
           href="/<%=file.folder && file.folder.title.length > 0 ? 'folder/' + file.folder.title : 'home' %>"
           >Go Back</a
         >
+        <% } else {%>
+        <a class="focusedButton black" href="/folder/share/<%=uuid%>"
+          >Go Back</a
+        >
+        <% }%>
       </div>
     </main>
     <%- include("./partials/footer.ejs") %>
