@@ -1,6 +1,6 @@
 const db = require("../prisma/queries");
 const { unlink } = require("node:fs");
-const { format } = require("date-fns");
+const { format, addWeeks, addDays, addHours } = require("date-fns");
 
 function fileSize(size, prefferedType) {
   const KB = size / 1024;
@@ -213,7 +213,83 @@ async function getFileDetails(req, res) {
       formattedSize: fileSize(file.size, "Mb"),
     };
 
-    res.render("filedetails", { file: file });
+    res.render("filedetails", { file: file, shared: false });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function postShareFolder(req, res) {
+  try {
+    const userId = req.user.id;
+    const folderId = Number(req.params.folderId);
+    const now = new Date();
+    const duration = req.body.duration;
+    const uuid = crypto.randomUUID();
+
+    let result;
+    if (duration === "week") {
+      result = addWeeks(now, 1);
+    } else if (duration === "day") {
+      result = addDays(now, 1);
+    } else if (duration === "hour") {
+      result = addHours(now, 1);
+    }
+
+    await db.addSharedFolder(userId, uuid, folderId, result);
+
+    console.log(uuid);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function getShareFolder(req, res) {
+  try {
+    const uuid = req.params.uuid;
+
+    const shared = await db.getSharedFolder(uuid);
+
+    shared.folder.files = shared.folder.files.map((file) => ({
+      ...file,
+      filetype: filetype(file.type),
+    }));
+    console.log(shared);
+
+    res.render("home", {
+      files: shared.folder.files,
+      folders: shared.folder,
+      foldername: shared.folder.title,
+      shared: true,
+      uuid: uuid,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function getShareDetails(req, res) {
+  try {
+    const uuid = req.params.uuid;
+    const fileId = Number(req.params.fileId);
+
+    const shared = await db.getSharedFile(uuid, fileId);
+
+    shared.folder.files = shared.folder.files.map((file) => ({
+      ...file,
+      filetype: filetype(file.type),
+      formattedDate: format(file.creationDate, "dd-MMMM-yy"),
+      formattedTime: format(file.creationDate, "HH:mm:ss"),
+      formattedSize: fileSize(file.size, "Mb"),
+    }));
+
+    console.log(shared.folder.files[0]);
+    res.render("filedetails", {
+      file: shared.folder.files[0],
+      shared: true,
+      sharedFolder: shared.folder.title,
+      uuid: uuid,
+    });
   } catch (err) {
     console.log(err);
   }
@@ -226,6 +302,7 @@ module.exports = {
   postAddFolder,
   postRenameFolder,
   postDeleteFolder,
+  postShareFolder,
   getFilesByFolder,
   // File
   postUpload,
@@ -233,4 +310,6 @@ module.exports = {
   postRenameFile,
   postFiletoFolder,
   getFileDetails,
+  getShareFolder,
+  getShareDetails,
 };

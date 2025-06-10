@@ -45,6 +45,14 @@ fileRouter.get(
   fileController.getFileDetails
 );
 
+fileRouter.get("/folder/share/:uuid", fileController.getShareFolder);
+
+fileRouter.post("/folder/:folderId/share", fileController.postShareFolder);
+fileRouter.get(
+  "/folder/share/:uuid/file/:fileId/details",
+  fileController.getShareDetails
+);
+
 // POSTs
 
 // file
