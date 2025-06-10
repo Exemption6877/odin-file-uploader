@@ -1,6 +1,6 @@
 const db = require("../prisma/queries");
 const { unlink } = require("node:fs");
-const { format, addWeeks, addDays, addHours } = require("date-fns");
+const { format, addWeeks, addDays, addHours, isBefore } = require("date-fns");
 
 function fileSize(size, prefferedType) {
   const KB = size / 1024;
@@ -238,7 +238,7 @@ async function postShareFolder(req, res) {
 
     await db.addSharedFolder(userId, uuid, folderId, result);
 
-    console.log(uuid);
+    res.redirect(`/folder/share/${uuid}`);
   } catch (err) {
     console.log(err);
   }
@@ -247,22 +247,31 @@ async function postShareFolder(req, res) {
 async function getShareFolder(req, res) {
   try {
     const uuid = req.params.uuid;
-
     const shared = await db.getSharedFolder(uuid);
+    if (!shared) {
+      res.json("Link does not exist / expired");
+    }
 
     shared.folder.files = shared.folder.files.map((file) => ({
       ...file,
       filetype: filetype(file.type),
     }));
-    console.log(shared);
 
-    res.render("home", {
-      files: shared.folder.files,
-      folders: shared.folder,
-      foldername: shared.folder.title,
-      shared: true,
-      uuid: uuid,
-    });
+    const now = new Date();
+    // const now = new Date("2025-06-15T12:00:00Z");
+
+    if (isBefore(now, shared.expDate)) {
+      res.render("home", {
+        files: shared.folder.files,
+        folders: shared.folder,
+        foldername: shared.folder.title,
+        shared: true,
+        uuid: uuid,
+      });
+    } else {
+      await db.deleteSharedFolder(uuid);
+      res.json("Link does not exist / expired");
+    }
   } catch (err) {
     console.log(err);
   }

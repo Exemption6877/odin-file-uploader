@@ -322,6 +322,18 @@ async function getSharedFile(uuid, fileId) {
   }
 }
 
+async function deleteSharedFolder(uuid) {
+  try {
+    return await prisma.sharedFolder.delete({
+      where: {
+        uuid: uuid,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 module.exports = {
   // User
   getUserByName,
@@ -345,4 +357,5 @@ module.exports = {
   addSharedFolder,
   getSharedFolder,
   getSharedFile,
+  deleteSharedFolder,
 };
