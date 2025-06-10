@@ -2,6 +2,8 @@ const db = require("../prisma/queries");
 const { unlink } = require("node:fs");
 const { format, addWeeks, addDays, addHours, isBefore } = require("date-fns");
 
+const cloud = require("../supabase/queries");
+
 function fileSize(size, prefferedType) {
   const KB = size / 1024;
 
@@ -124,9 +126,11 @@ async function postUpload(req, res) {
         date,
         foldername
       );
+      await cloud.uploadFile(req.file);
       res.redirect(`/folder/${foldername}`);
     } else {
       await db.addFile(filename, filetype, filesize, filepath, userId, date);
+      await cloud.uploadFile(req.file);
       res.redirect("/home");
     }
   } catch (err) {

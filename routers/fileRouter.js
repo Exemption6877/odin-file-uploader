@@ -47,7 +47,6 @@ fileRouter.get(
 
 fileRouter.get("/folder/share/:uuid", fileController.getShareFolder);
 
-fileRouter.post("/folder/:folderId/share", fileController.postShareFolder);
 fileRouter.get(
   "/folder/share/:uuid/file/:fileId/details",
   fileController.getShareDetails
@@ -76,5 +75,8 @@ fileRouter.post("/file/:fileId/move", fileController.postFiletoFolder);
 fileRouter.post("/create/folder", fileController.postAddFolder);
 fileRouter.post("/folder/:folderId/edit", fileController.postRenameFolder);
 fileRouter.post("/folder/:folderId/delete", fileController.postDeleteFolder);
+
+// share
+fileRouter.post("/folder/:folderId/share", fileController.postShareFolder);
 
 module.exports = fileRouter;
