@@ -83,6 +83,13 @@ async function postDeleteFolder(req, res) {
     const userId = req.user.id;
     const folderId = Number(req.params.folderId);
     const foldername = req.body.renameFolder;
+
+    const isShared = await db.getSharedFolderById(folderId);
+
+    if (isShared) {
+      await db.deleteSharedFolderById(folderId);
+    }
+
     await db.deleteFolder(userId, folderId, foldername);
     res.redirect("/home");
   } catch (err) {

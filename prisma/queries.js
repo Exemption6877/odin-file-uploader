@@ -299,6 +299,18 @@ async function getSharedFolder(uuid) {
   }
 }
 
+async function getSharedFolderById(folderId) {
+  try {
+    return await prisma.sharedFolder.findFirst({
+      where: {
+        folderId: folderId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 async function getSharedFile(uuid, fileId) {
   try {
     return await prisma.sharedFolder.findUnique({
@@ -334,6 +346,18 @@ async function deleteSharedFolder(uuid) {
   }
 }
 
+async function deleteSharedFolderById(folderId) {
+  try {
+    return await prisma.sharedFolder.deleteMany({
+      where: {
+        folderId: folderId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 module.exports = {
   // User
   getUserByName,
@@ -358,4 +382,6 @@ module.exports = {
   getSharedFolder,
   getSharedFile,
   deleteSharedFolder,
+  getSharedFolderById,
+  deleteSharedFolderById,
 };
